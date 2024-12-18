@@ -8,6 +8,7 @@ def defineModel():
     print(model.summary())
     
     joblib.dump(model, "model.joblib")
+    print("Model EfficientNETB0 best hpo defined")
     return
 
 # Ejecutar la búsqueda de hiperparámetros
