@@ -17,14 +17,14 @@ async def predict_land_use(file: UploadFile = File(...)):
         image = Image.open(io.BytesIO(await file.read()))
         image = image.resize((256, 256))  # Tamaño típico para EfficientNet
         image = image.convert("RGB")      # Asegurar que es RGB
-        
-        image_array = np.array(image) 
+
+        image_array = np.array(image)
         # / 255.0  # Normalización
         image_array = preprocess_input(image_array)  # Preprocesamiento estándar de EfficientNet
-        
-        print(f"Forma de entrada: {img_batch.shape}, Tipo: {img_batch.dtype}")
 
         img_batch = np.expand_dims(image_array, axis=0)
+
+        print(f"Forma de entrada: {img_batch.shape}, Tipo: {img_batch.dtype}")
 
         # Hacer la predicción
         prediction_probability = final_model.predict(img_batch)
