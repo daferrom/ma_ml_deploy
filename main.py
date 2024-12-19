@@ -21,7 +21,7 @@ async def predict_land_use(file: UploadFile = File(...)):
 
         # Hacer la predicción
         prediction_probability = final_model.predict(img_batch)
-        predicted_class_number = np.argmax(prediction_probability, axis=1)[0]
+        predicted_class_number = int(np.argmax(prediction_probability, axis=1)[0])
 
         return JSONResponse({"prediction": predicted_class_number})
     except Exception as e:
