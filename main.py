@@ -30,6 +30,9 @@ async def predict_land_use(file: UploadFile = File(...)):
         prediction_probability = final_model.predict(img_batch)
         predicted_class_number = int(np.argmax(prediction_probability, axis=1)[0])
 
-        return JSONResponse({"prediction": predicted_class_number, "prediction_probability": prediction_probability})
+        # Convertir las probabilidades a una lista serializable
+        prediction_probability_list = prediction_probability.tolist()
+
+        return JSONResponse({"prediction": predicted_class_number, "prediction_probability": prediction_probability_list})
     except Exception as e:
         return JSONResponse({"error": f"Hubo un problema procesando la imagen: {str(e)}"}, status_code=500)
