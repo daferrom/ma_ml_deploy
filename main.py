@@ -19,7 +19,6 @@ async def predict_land_use(file: UploadFile = File(...)):
         image = image.convert("RGB")      # Asegurar que es RGB
 
         image_array = np.array(image)
-        # / 255.0  # Normalización
         image_array = preprocess_input(image_array)  # Preprocesamiento estándar de EfficientNet
 
         img_batch = np.expand_dims(image_array, axis=0)
