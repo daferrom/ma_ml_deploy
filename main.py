@@ -4,6 +4,7 @@ import numpy as np
 from PIL import Image
 import tensorflow as tf
 from fastapi import FastAPI, File, UploadFile
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 
 app = FastAPI()
@@ -16,13 +17,19 @@ async def predict_land_use(file: UploadFile = File(...)):
         image = Image.open(io.BytesIO(await file.read()))
         image = image.resize((256, 256))  # Tamaño típico para EfficientNet
         image = image.convert("RGB")      # Asegurar que es RGB
-        image_array = np.array(image) / 255.0  # Normalización
+        
+        image_array = np.array(image) 
+        # / 255.0  # Normalización
+        image_array = preprocess_input(image_array)  # Preprocesamiento estándar de EfficientNet
+        
+        print(f"Forma de entrada: {img_batch.shape}, Tipo: {img_batch.dtype}")
+
         img_batch = np.expand_dims(image_array, axis=0)
 
         # Hacer la predicción
         prediction_probability = final_model.predict(img_batch)
         predicted_class_number = int(np.argmax(prediction_probability, axis=1)[0])
 
-        return JSONResponse({"prediction": predicted_class_number})
+        return JSONResponse({"prediction": predicted_class_number, "prediction_probability": prediction_probability})
     except Exception as e:
         return JSONResponse({"error": f"Hubo un problema procesando la imagen: {str(e)}"}, status_code=500)
